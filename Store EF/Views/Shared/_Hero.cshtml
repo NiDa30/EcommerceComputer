@@ -1,0 +1,19 @@
+﻿@using Store_EF.Models;
+@{ 
+    StoreEntities store = new Store_EF.Models.StoreEntities();
+}
+
+<section class="hero">
+    <div class="hero__inner">
+        <div class="hero__left">
+            <ul>
+                @foreach(Category c in store.Categories) { 
+                    <li><a href="@Url.Action("Index", "Products", new { category = c.Name })">@c.Name</a></li>
+                }
+            </ul>
+        </div>
+        <div class="hero__right">
+            <img src="~/Public/imgs/hero.png" alt="hero" />
+        </div>
+    </div>
+</section>

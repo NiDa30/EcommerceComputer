@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "Live Preview",
+      "workspacePath": "d:\\Kiểm thử pm\\pj kiểm thử\\EcommerceComputer-V3",
+      "problemMatcher": [],
+      "label": "Live Preview: Run Server",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

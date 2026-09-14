@@ -1,0 +1,96 @@
+@using Store_EF.Models
+@model PagedList.IPagedList<Product>
+@using PagedList.Mvc;
+@using PagedList;
+@using Store_EF.Models.Extensions;
+
+@{
+    ViewBag.title = "Home page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    if (ViewBag.MaxPage == null)
+    {
+        ViewBag.MaxPage = 1;
+    }
+    StoreEntities store = new StoreEntities();
+
+    string product = Request.QueryString.Get("product");
+    string category = Request.QueryString.Get("category");
+    string brand = Request.QueryString.Get("brand");
+}
+
+<div class="container">
+    <main>
+        @Html.Partial("_Hero")
+        <section class="product">
+            @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+            {
+                if (product != null)
+                {
+                    <input type="hidden" name="product" value="@product" />
+                }
+                if (category != null)
+                {
+                    <input type="hidden" name="category" value="@category" />
+                }
+                <label for="brand">Nhãn hiệu</label>
+                <select name="brand">
+                    @foreach (Brand b in store.Brands)
+                    {
+                        if (b.Name.Equals(brand, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@b.Name" selected>
+                                @b.Name
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@b.Name">
+                                @b.Name
+                            </option>
+                        }
+                    }
+                </select>
+                <button type="submit">Lọc</button>
+            }
+            <div class="product__list">
+                @if (Model != null)
+                {
+                    foreach (Product p in Model)
+                    {
+                        <a class="product__item" href="@Url.Action("Detail", "Products", new { Id = p.ProductId })">
+                            <div class="product__img">
+                                <img src="@Url.Content("~/Public/Imgs/Products/" + p.Thumbnail(store))" alt="" />
+                                @{
+                                    double result = p.DiscountPercentage();
+                                    if (result != 0)
+                                    {
+                                        <div class="product__sale">-@result%</div>
+                                    }
+                                }
+                            </div>
+                            <div class="product__info">
+                                <h3 class="product__name">@p.Title</h3>
+                                <div class="products__price">Giá: @p.FormattedPrice()</div>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        </section>
+        <div class="pagination">
+            @{
+                string action = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+            }
+            @Html.PagedListPager(
+                Model,
+                page => Url.Action(action, new { category, product, page }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new[] { "" },
+                    MaximumPageNumbersToDisplay = ViewBag.MaxPage,
+                }
+            )
+        </div>
+    </main>
+</div>
+

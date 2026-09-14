@@ -1,0 +1,11 @@
+# Khởi động LocalDB:
+sqllocaldb start MSSQLLocalDB
+
+# Build dự án (nếu có thay đổi code):
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+
+# Chạy IIS Express:
+& "C:\Program Files\IIS Express\iisexpress.exe" /path:"D:\Kiểm thử pm\pj kiểm thử\EcommerceComputer-V3\Store EF" /port:5000
+
+# Truy cập trình duyệt:
+# http://localhost:5000
